@@ -5,12 +5,18 @@ async function handleGenerateNewShortURL(req, res) {
   const body = req.body;
   if (!body.url) return res.status(400).json({ error: "url is required" });
   const shortId = shortid();
+    const allUrls = await URL.find({});
   await URL.create({
     shortId: shortId,
     redirectURL: body.url,
     visitHistory: [],
+
   });
-  return res.status(200).json({ id: shortId });
+    return res.render('home', {
+        id: shortId,
+        urls: allUrls
+    });
+    //   return res.status(200).json({ id: shortId });
 }
 
 async function handleGetAnalytics(req, res) {

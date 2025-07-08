@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const urlRoute = require("./routes/urlRouter");
 const { connectToMongoDB } = require("./connect");
 const URL = require("./models/url");
+const path = require('path')
+const staticRouter = require('./routes/staticRouter')
 
 const port = 5656;
 
@@ -16,28 +18,23 @@ connectToMongoDB("mongodb://127.0.0.1:27017/url-shortner")
     console.log(error);
   });
 
+app.set("view engine", "ejs")
+app.set('views', path.resolve("./views"))
+
+
 //middleware connections
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // parses URL-encoded bodies
 app.use("/url", urlRoute);
+app.use('/', staticRouter)
 
-app.get("/test", async (req, res) => {
-  const allUrls = await URL.find({});
-  return res.end(`<html>
-            <head></head>
-            <body>
-  <ol>
-  ${allUrls
-    .map(
-      (url) =>
-        `<li>${url.shortId} - ${url.redirectURL}  -  ${url.visitHistory.length}</li>`
-    )
-    .join("")}
-  </ol>
+// app.get("/test", async (req, res) => {
+//   const allUrls = await URL.find({});
+//     return res.render('home', {
+//         urls: allUrls,
 
-            </body>
-            </html>`);
-});
+//     })
+// });
 
 app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
@@ -54,9 +51,9 @@ app.get("/url/:shortId", async (req, res) => {
   res.redirect(entry.redirectURL);
 });
 
-app.get("/", (req, res) => {
-  res.json("welcome to custom url");
-});
+// app.get("/", (req, res) => {
+//   res.json("welcome to custom url");
+// });
 
 app.listen(port, () => {
   console.log(`custom url shortner ser is working at ${port}`);
