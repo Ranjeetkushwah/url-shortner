@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Home</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #dfe9f3, #ffffff);
+      color: #333;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(90deg, #00b4db, #0083b0);
+      color: #fff;
+      padding: 25px;
+      text-align: center;
+      font-size: 2.5em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      margin-bottom: 50px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffffcc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      margin-bottom: 30px;
+    }
+
+    th, td {
+      padding: 15px 20px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+      transition: background-color 0.3s;
+       word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 200px;
+    }
+
+    th {
+      background: linear-gradient(90deg, #8c20ff, #ab50ff);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+    }
+
+    tr:hover td {
+      background-color: #f5f7fa;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f9fafc;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin: 20px 0;
+        word-wrap: break-word;
+  overflow-wrap: break-word;
+    }
+
+    a {
+      color: #0083b0;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s, border-bottom 0.3s;
+      border-bottom: 1px solid transparent;
+    }
+
+    a:hover {
+      color: #005f73;
+      border-bottom: 1px solid #005f73;
+    }
+
+    form {
+      margin-top: 30px;
+      background: #ffffffcc;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #0083b0;
+      outline: none;
+      box-shadow: 0 0 8px rgba(0, 131, 176, 0.3);
+      background-color: #fdfdff;
+    }
+
+    button {
+      display: inline-block;
+      padding: 12px 25px;
+      background: linear-gradient(90deg,  #8c20ff, #9d36fd);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #b781f0, #b36ff3);
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+  </style>
+  </head>
+  <body>
+    <h1>Genrate short url</h1>
+    <% if (locals.id) { %>
+    <p>Your genrated short url: <a href="http://localhost:5656/url/<%= id %>">  http://localhost:5656/url/<%= locals.id %>  </p>
+    <% } %>
+
+    <div>
+      <form method="POST" action="/url">
+        <label>Paste your url</label>
+        <input name="url" type="text" required placeholder="http://example.com" />
+        <button type="submit" >Genrate</button>
+      </form>
+    </div>
+
+    <hr />
+    <div>
+      <% if (locals.urls) { %>
+      <h4>table of genrate short url</h4>
+      <table>
+        <thead>
+          <th>S.no</th>
+          <th>ShortId</th>
+          <th>Redirect Url</th>
+          <th>Clicks</th>
+          <th>Check your URl</th>
+        </thead>
+        <tbody>
+          <% urls.forEach((url,index )=> { %>
+          <tr>
+            <td><%= index+1 %></td>
+            <td><%= url.shortId %></td>
+            <td><%= url.redirectURL %></td>
+            <td><%= url.visitHistory.length %></td>
+            <td><a href="http://localhost:5656/url/<%= url.shortId %>">Check your Link</a></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <% } %>
+    </div>
+
+    <script src="" async defer></script>
+  </body>
+</html>

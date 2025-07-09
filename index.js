@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const urlRoute = require("./routes/urlRouter");
 const { connectToMongoDB } = require("./connect");
 const URL = require("./models/url");
 const path = require('path')
+const cookieParser = require('cookie-parser')
+const { restrictToLoggedinUserOnly, checkAuth } = require('./middlewares/auth')
+
+
 const staticRouter = require('./routes/staticRouter')
+const urlRoute = require("./routes/urlRouter");
+const userRoute = require('./routes/userRouter')
 
 const port = 5656;
 
@@ -25,16 +29,13 @@ app.set('views', path.resolve("./views"))
 //middleware connections
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // parses URL-encoded bodies
-app.use("/url", urlRoute);
-app.use('/', staticRouter)
+app.use(cookieParser());
 
-// app.get("/test", async (req, res) => {
-//   const allUrls = await URL.find({});
-//     return res.render('home', {
-//         urls: allUrls,
 
-//     })
-// });
+app.use("/url", restrictToLoggedinUserOnly, urlRoute);      //restrictToLoggedinUserOnly is inline middleware
+app.use('/', checkAuth, staticRouter)
+app.use('/user', userRoute)
+
 
 app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
@@ -56,5 +57,5 @@ app.get("/url/:shortId", async (req, res) => {
 // });
 
 app.listen(port, () => {
-  console.log(`custom url shortner ser is working at ${port}`);
+  console.log(`custom url shortner is working at http://localhost:${port}/`);
 });
